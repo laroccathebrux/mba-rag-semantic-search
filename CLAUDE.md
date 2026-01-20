@@ -92,3 +92,10 @@ PDF_PATH=document.pdf
 │   └── chat.py            # CLI interface
 └── README.md
 ```
+
+## Active Technologies
+- Python 3.x (required by MBA challenge) + LangChain (langchain, langchain-core, langchain-community, langchain-openai, langchain-postgres, langchain-text-splitters), pypdf (001-rag-semantic-search)
+- PostgreSQL 17 with pgVector extension (Docker) (001-rag-semantic-search)
+
+## Recent Changes
+- 001-rag-semantic-search: Added Python 3.x (required by MBA challenge) + LangChain (langchain, langchain-core, langchain-community, langchain-openai, langchain-postgres, langchain-text-splitters), pypdf
