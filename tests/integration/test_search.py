@@ -1,8 +1,17 @@
 """
 Testes de integração para o módulo search.py.
 
-Estes testes verificam o pipeline completo de busca semântica com
-serviços externos mockados (OpenAI API, PostgreSQL/pgVector).
+Este módulo contém testes que verificam o pipeline completo de busca
+semântica com serviços externos mockados (OpenAI API, PostgreSQL/pgVector).
+
+Os testes simulam o fluxo completo:
+    1. Inicialização dos componentes (embeddings, vector store, LLM)
+    2. Busca de similaridade no banco vetorial
+    3. Construção do contexto a partir dos documentos relevantes
+    4. Geração de resposta pelo LLM baseada no contexto
+
+Classes de teste:
+    TestSearchPromptIntegration: Testes de integração para search_prompt.
 """
 
 import os
@@ -19,7 +28,13 @@ class TestSearchPromptIntegration:
     """Testes de integração para a função search_prompt."""
 
     def test_search_prompt_full_pipeline(self):
-        """Testa o pipeline completo de busca com serviços externos mockados."""
+        """
+        Testa o pipeline completo de busca com serviços externos mockados.
+
+        Cenário: Usuário faz pergunta sobre conteúdo presente no documento.
+        Esperado: Sistema retorna resposta gerada pelo LLM baseada no contexto
+                  recuperado via busca de similaridade.
+        """
         with patch.dict(os.environ, {
             "OPENAI_API_KEY": "test-key",
             "DATABASE_URL": "postgresql://test:test@localhost/test",
@@ -63,7 +78,13 @@ class TestSearchPromptIntegration:
                 mock_llm.invoke.assert_called_once()
 
     def test_search_prompt_initialization_only(self):
-        """Testa que search_prompt retorna True quando nenhuma pergunta é fornecida."""
+        """
+        Testa que search_prompt retorna True quando nenhuma pergunta é fornecida.
+
+        Cenário: Chat inicializa o sistema sem fazer uma pergunta ainda.
+        Esperado: Função retorna True indicando que a inicialização foi bem-sucedida
+                  sem executar busca ou chamar o LLM.
+        """
         with patch.dict(os.environ, {
             "OPENAI_API_KEY": "test-key",
             "DATABASE_URL": "postgresql://test:test@localhost/test",
@@ -95,7 +116,13 @@ class TestSearchPromptIntegration:
                 mock_llm.invoke.assert_not_called()
 
     def test_search_prompt_empty_question(self):
-        """Testa que search_prompt retorna None para pergunta vazia."""
+        """
+        Testa que search_prompt retorna None para pergunta vazia.
+
+        Cenário: Usuário envia pergunta contendo apenas espaços em branco.
+        Esperado: Função retorna None indicando que não há pergunta válida
+                  para processar.
+        """
         with patch.dict(os.environ, {
             "OPENAI_API_KEY": "test-key",
             "DATABASE_URL": "postgresql://test:test@localhost/test",
@@ -125,7 +152,12 @@ class TestSearchPromptIntegration:
                 assert result is None
 
     def test_search_prompt_database_connection_error(self):
-        """Testa tratamento de erro de conexão com banco de dados."""
+        """
+        Testa tratamento de erro de conexão com banco de dados.
+
+        Cenário: PostgreSQL não está disponível quando o usuário faz uma pergunta.
+        Esperado: Função retorna None indicando erro (falha tratada graciosamente).
+        """
         with patch.dict(os.environ, {
             "OPENAI_API_KEY": "test-key",
             "DATABASE_URL": "postgresql://test:test@localhost/test",
@@ -150,7 +182,14 @@ class TestSearchPromptIntegration:
                 assert result is None
 
     def test_search_prompt_out_of_context_response(self):
-        """Testa resposta para pergunta fora do contexto do documento."""
+        """
+        Testa resposta para pergunta fora do contexto do documento.
+
+        Cenário: Usuário faz pergunta sobre assunto não presente no documento
+                 (ex: "Qual a capital da França?").
+        Esperado: LLM retorna a mensagem padrão "Não tenho informações necessárias
+                  para responder sua pergunta." conforme especificado no prompt.
+        """
         with patch.dict(os.environ, {
             "OPENAI_API_KEY": "test-key",
             "DATABASE_URL": "postgresql://test:test@localhost/test",
