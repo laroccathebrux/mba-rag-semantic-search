@@ -59,15 +59,18 @@ OPENAI_API_KEY=<your-key>
 OPENAI_EMBEDDING_MODEL=text-embedding-3-small
 GOOGLE_API_KEY=<optional>
 GOOGLE_EMBEDDING_MODEL=models/embedding-001
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/rag
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=<your-password>
+POSTGRES_DB=rag
+DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}
 PG_VECTOR_COLLECTION_NAME=<collection-name>
 PDF_PATH=document.pdf
 ```
 
 ### Database
 - PostgreSQL 17 with pgVector extension
-- Default credentials: postgres/postgres
-- Database name: rag
+- Credentials: Set via POSTGRES_USER and POSTGRES_PASSWORD in .env
+- Database name: rag (configurable via POSTGRES_DB)
 - Port: 5432
 
 ## Required Packages (Key Dependencies)

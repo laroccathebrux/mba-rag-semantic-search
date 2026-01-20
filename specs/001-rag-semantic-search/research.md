@@ -232,7 +232,10 @@ RESPONDA A "PERGUNTA DO USUÁRIO"
 ```env
 OPENAI_API_KEY=<your-key>
 OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/rag
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=<your-password>
+POSTGRES_DB=rag
+DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}
 PG_VECTOR_COLLECTION_NAME=pdf_chunks
 PDF_PATH=document.pdf
 ```

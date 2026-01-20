@@ -31,9 +31,17 @@ cp .env.example .env
 Edit `.env`:
 
 ```env
+# OpenAI
 OPENAI_API_KEY=sk-your-api-key-here
 OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/rag
+
+# PostgreSQL
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your-secure-password
+POSTGRES_DB=rag
+DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}
+
+# Application
 PG_VECTOR_COLLECTION_NAME=pdf_chunks
 PDF_PATH=document.pdf
 ```
